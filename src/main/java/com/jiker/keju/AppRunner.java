@@ -1,15 +1,43 @@
 package com.jiker.keju;
+import com.jiker.keju.taxi.CalculateFare;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.util.regex.Pattern;
+
+import static java.util.regex.Pattern.compile;
 
 public class AppRunner {
 
-    public static void main(String[] args) {
-        /*TODO
-          1. args[0]为resources下的测试数据文件名，例如传入的args[0]值为"testData.txt"，注意并不包含文件路径。
-          2. 你写的程序将把testDataFile作为参数加载此文件并读取文件内的测试数据，并对每条测试数据计算结果。
-          3. 将所有计费结果拼接并使用\n分割，然后保存到receipt变量中。
-         */
-        String testDataFile = args[0];
-        String receipt = "";
-        System.out.println(receipt);
+        public static void main(String[] args) throws Exception {
+            String testDataFile =  args[0];;
+            String receipt= new AppRunner().readFile(new File("src/main/resources/"+testDataFile));
+            System.out.println(receipt);
+        }
+
+        public String readFile(File file) throws Exception {
+            BufferedReader br = new BufferedReader(new java.io.FileReader(file));
+            StringBuffer sb = new StringBuffer();
+            String s;
+            while ((s = br.readLine()) != null) {
+                sb.append(getReceipt(getTimeAndDistance(s)));
+            }
+            br.close();
+            return sb.toString();
+        }
+
+        public int[] getTimeAndDistance(String str) {
+            String[] oneline = str.split(",");
+            Pattern p = compile("[^\\d]");
+            int[] result = new int[2];
+            result[0] = Integer.parseInt(p.matcher(oneline[0]).replaceAll(""));
+            result[1] = Integer.parseInt(p.matcher(oneline[1]).replaceAll(""));
+            return result;
+        }
+
+        public String getReceipt(int[] strline) {
+            int fare = new CalculateFare().calculate(strline[0], strline[1]);
+            String result = "收费" + fare + "元\n";
+            return result;
+        }
     }
-}

@@ -7,10 +7,10 @@ public class CalculateFare {
         float fare;
         if (kilometre <= 2) {
             fare = Math.round(0.25 * minute + 6);
-        } else if (kilometre <= 8) {
+        } else if (kilometre > 2 && kilometre <= 8) {
             fare = Math.round((kilometre - 2) * 0.8 + 0.25 * minute + 6);
         } else {
-            fare = Math.round((kilometre - 2) * 0.8 + (kilometre - 8) * 0.5 + 0.25 * minute + 6);
+            fare = Math.round(1.2 + 1.2 * kilometre + 0.25 * kilometre);
         }
         return (int) fare;
     }
